@@ -1,0 +1,6 @@
+*.out
+*.cmp
+*.tst
+demo/
+00/
+.DS_Store
