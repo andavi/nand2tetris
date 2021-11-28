@@ -16,5 +16,20 @@ CHIP PC {
     OUT out[16];
 
     PARTS:
-    // Put your code here:
+    // Increment value in register via feedback wire
+    Inc16(in=feedback, out=incremented);
+
+    // Go backwards in precedence to get correct value.
+    // No increment flag is tested since it has lowest 
+    // precedence. It is tested below
+    Mux16(a=incremented, b=in, sel=load, out=v1);
+    Mux16(a=v1, b=false, sel=reset, out=v2);
+
+    // Use Or gates to check for any flags.
+    // This is where the increment flag is picked up
+    Or(a=reset, b=load, out=w1);
+    Or(a=w1, b=inc, out=w2);
+
+    // Finally, if flag, load propogated value
+    Register(in=v2, load=w2, out=feedback, out=out);
 }
